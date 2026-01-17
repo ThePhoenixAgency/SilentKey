@@ -1,0 +1,134 @@
+{
+  "identifier" : "SilentKey",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "49.99",
+      "familyShareable" : false,
+      "internalID" : "SILENTKEY_LIFETIME",
+      "localizations" : [
+        {
+          "description" : "Accès illimité à vie sans abonnement récurrent. Créez un nombre illimité de secrets sécurisés.",
+          "displayName" : "SilentKey Lifetime",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Accès illimité à vie sans abonnement récurrent. Créez un nombre illimité de secrets sécurisés.",
+          "displayName" : "SilentKey Accès Vie",
+          "locale" : "fr_FR"
+        }
+      ],
+      "productID" : "com.silentkey.lifetime",
+      "referenceName" : "Lifetime Access",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "SILENT_KEY_APP",
+    "_developerTeamID" : "YOUR_TEAM_ID",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : null,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      }
+    ]
+  },
+  "subscriptions" : [
+    {
+      "adHocOffers" : [],
+      "codeOffers" : [],
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "groupNumber" : 1,
+      "internalID" : "SILENTKEY_PRO_MONTHLY",
+      "introductoryOffer" : {
+        "internalID" : "INTRO_MONTHLY",
+        "numberOfPeriods" : 1,
+        "paymentMode" : "free",
+        "subscriptionPeriod" : "P1M"
+      },
+      "localizations" : [
+        {
+          "description" : "Pro subscription with unlimited secrets, priority support, and advanced features. Billed monthly.",
+          "displayName" : "SilentKey Pro",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Abonnement Pro avec secrets illimités, support prioritaire et fonctionnalités avancées. Facturation mensuelle.",
+          "displayName" : "SilentKey Pro",
+          "locale" : "fr_FR"
+        }
+      ],
+      "productID" : "com.silentkey.pro",
+      "recurringSubscriptionPeriod" : "P1M",
+      "referenceName" : "Pro Monthly",
+      "subscriptionGroupNumber" : 1,
+      "type" : "RecurringSubscription"
+    },
+    {
+      "adHocOffers" : [],
+      "codeOffers" : [],
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "groupNumber" : 1,
+      "internalID" : "SILENTKEY_UNLIMITED",
+      "introductoryOffer" : null,
+      "localizations" : [
+        {
+          "description" : "Unlimited secrets storage without premium features. Perfect for power users who need more than 5 secrets.",
+          "displayName" : "Unlimited Secrets",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Stockage illimité de secrets sans fonctionnalités premium. Parfait pour les utilisateurs intensifs ayant besoin de plus de 5 secrets.",
+          "displayName" : "Secrets Illimités",
+          "locale" : "fr_FR"
+        }
+      ],
+      "productID" : "com.silentkey.unlimited",
+      "recurringSubscriptionPeriod" : "P1M",
+      "referenceName" : "Unlimited Secrets",
+      "subscriptionGroupNumber" : 1,
+      "type" : "RecurringSubscription"
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
