@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+    SilentKey Entitlements
+    Configuration des permissions pour le sandboxing macOS App Store
+    
+    Author: PhoenixProject
+    Website: http://ThePhoenixAgency.github.io
+-->
+<plist version="1.0">
+<dict>
+    <!-- App Sandbox -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    
+    <!-- Accès réseau pour les mises à jour -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+    
+    <!-- Accès au Keychain pour stocker le mot de passe maître -->
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>$(TeamIdentifierPrefix)com.phoenixproject.silentkey</string>
+    </array>
+    
+    <!-- Hardened Runtime -->
+    <key>com.apple.security.cs.allow-jit</key>
+    <false/>
+    
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <false/>
+    
+    <key>com.apple.security.cs.allow-dyld-environment-variables</key>
+    <false/>
+    
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <false/>
+    
+    <key>com.apple.security.cs.disable-executable-page-protection</key>
+    <false/>
+    
+    <!-- Accès aux fichiers utilisateur via dialog (bookmarks) -->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+    
+    <!-- Accès en lecture/écriture aux fichiers sélectionnés -->
+    <key>com.apple.security.files.bookmarks.app-scope</key>
+    <true/>
+    
+    <!-- Autoriser l'impression -->
+    <key>com.apple.security.print</key>
+    <true/>
+    
+    <!-- Désactiver les permissions non nécessaires pour la sécurité -->
+    <!-- PAS de camera -->
+    <key>com.apple.security.device.camera</key>
+    <false/>
+    
+    <!-- PAS de microphone -->
+    <key>com.apple.security.device.microphone</key>
+    <false/>
+    
+    <!-- PAS d'accès USB -->
+    <key>com.apple.security.device.usb</key>
+    <false/>
+    
+    <!-- PAS d'accès Bluetooth -->
+    <key>com.apple.security.device.bluetooth</key>
+    <false/>
+    
+    <!-- PAS d'accès à la localisation -->
+    <key>com.apple.security.personal-information.location</key>
+    <false/>
+    
+    <!-- PAS d'accès aux contacts -->
+    <key>com.apple.security.personal-information.addressbook</key>
+    <false/>
+    
+    <!-- PAS d'accès au calendrier -->
+    <key>com.apple.security.personal-information.calendars</key>
+    <false/>
+    
+    <!-- PAS d'accès aux photos -->
+    <key>com.apple.security.personal-information.photos-library</key>
+    <false/>
+    
+    <!-- Protection contre les injections de code -->
+    <key>com.apple.security.get-task-allow</key>
+    <false/>
+</dict>
+</plist>
