@@ -43,8 +43,7 @@ let package = Package(
         .testTarget(
             name: "SilentKeyCoreTests",
             dependencies: ["SilentKeyCore"],
-            path: "Tests/CoreTests"
-        ),
+            path: "Tests/SilentKeyTests"        ),
         .testTarget(
             name: "SilentKeyIntegrationTests",
             dependencies: ["SilentKeyCore"],
