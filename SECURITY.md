@@ -33,4 +33,4 @@ This project has not yet undergone a formal audit. Use at your own risk.
 
 ## Contact
 
-For sensitive issues, contact: [@EthanBellichaBernier](https://github.com/EthanBellichaBernier)
+For sensitive issues, use [GitHub Security Advisories](https://github.com/ThePhoenixAgency/SilentKey/security/advisories/new) or contact: phoenix.project@outlook.fr
