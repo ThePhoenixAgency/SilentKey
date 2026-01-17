@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/ThePhoenixAgency/SilentKey/discussions
+    about: Ask questions and discuss with other community members
+  - name: 📖 Documentation
+    url: https://github.com/ThePhoenixAgency/SilentKey/wiki
+    about: Browse the official documentation
+  - name: 🔒 Security Vulnerability
+    url: https://github.com/ThePhoenixAgency/SilentKey/security/advisories/new
+    about: Report a security vulnerability privately
+  - name: ⭐ Feature Requests
+    url: https://github.com/ThePhoenixAgency/SilentKey/discussions/categories/feature-requests
+    about: Suggest new features or improvements
