@@ -109,8 +109,7 @@ struct StoreView: View {
                 ProductCard(
                     product: product,
                     isSelected: selectedProduct?.id == product.id,
-                    isRecommended: product.id == StoreManager.ProductID.lifetime.rawValue
-                ) {
+                        isRecommended: product.id == "com.silentkey.lifetime"                ) {
                     selectedProduct = product
                 }
             }
