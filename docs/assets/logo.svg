@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Professional minimalist logo for SilentKey -->
+  <!-- Key symbol with lock concept -->
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#333333;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Key body -->
+  <rect x="40" y="90" width="80" height="20" rx="10" fill="url(#grad)"/>
+  
+  <!-- Key head (circle) -->
+  <circle cx="140" cy="100" r="25" fill="none" stroke="url(#grad)" stroke-width="8"/>
+  <circle cx="140" cy="100" r="8" fill="url(#grad)"/>
+  
+  <!-- Key teeth -->
+  <rect x="40" y="85" width="8" height="10" fill="url(#grad)"/>
+  <rect x="50" y="85" width="8" height="15" fill="url(#grad)"/>
+  <rect x="60" y="85" width="8" height="12" fill="url(#grad)"/>
+  
+  <!-- Silent wave symbol (minimalist) -->
+  <path d="M 165 85 Q 175 95 165 105" fill="none" stroke="#0066cc" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 175 80 Q 190 95 175 110" fill="none" stroke="#0066cc" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+</svg>
