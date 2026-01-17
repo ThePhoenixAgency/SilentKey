@@ -41,7 +41,7 @@ let package = Package(
         
         // MARK: - Tests
         .testTarget(
-            nam:e: "SilentKeyTests",
+            name: "SilentKeyTests",
             dependencies: ["SilentKeyCore"],
             path: "Tests/SilentKeyTests"        ),
     ]
