@@ -9,6 +9,10 @@
 import Foundation
 import OSLog
 
+#if os(macOS)
+import AppKit
+#endif
+
 /// Gestionnaire centralisé de logging professionnel
 /// Capture tous les événements, erreurs et métriques pour analyse et support
 public final class AppLogger {
