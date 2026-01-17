@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SilentKey - Local-first developer secrets vault with double-layer encryption">
+    <meta name="author" content="PhoenixProject">
+    <title>SilentKey - Secure Secrets Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .tagline {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+        
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 16px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .lang-btn:hover, .lang-btn.active {
+            background: white;
+            color: #667eea;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            margin-top: -40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .feature {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .support-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .support-box h2 {
+            color: white;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            margin-top: 50px;
+        }
+        
+        footer a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid white;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-switch">
+        <button class="lang-btn active" onclick="switchLang('en')">EN</button>
+        <button class="lang-btn" onclick="switchLang('fr')">FR</button>
+    </div>
+    
+    <header>
+        <div class="container">
+            <h1>SilentKey</h1>
+            <p class="tagline" data-en="Secure Secrets Management for Developers" data-fr="Gestion Sécurisée des Secrets pour Développeurs"></p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="content">
+            <div class="section">
+                <h2 data-en="Overview" data-fr="Présentation"></h2>
+                <p data-en="SilentKey is a local-first developer secrets vault featuring double-layer encryption for maximum security. Built with SwiftUI for macOS and iOS, it provides a professional solution for managing API keys, tokens, credentials, SSH keys, and other sensitive data." 
+                   data-fr="SilentKey est un coffre-fort local pour secrets de développeurs avec double encryption pour une sécurité maximale. Construit avec SwiftUI pour macOS et iOS, il offre une solution professionnelle pour gérer les clés API, tokens, identifiants, clés SSH et autres données sensibles."></p>
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="https://github.com/ThePhoenixAgency/SilentKey" class="btn btn-primary" data-en="View on GitHub" data-fr="Voir sur GitHub"></a>
+                <a href="https://github.com/ThePhoenixAgency/SilentKey/releases" class="btn btn-secondary" data-en="Download Latest Release" data-fr="Télécharger la Dernière Version"></a>
+            </div>
+            
+            <div class="section">
+                <h2 data-en="Key Features" data-fr="Fonctionnalités Principales"></h2>
+                <div class="features">
+                    <div class="feature">
+                        <h3 data-en="Double-Layer Encryption" data-fr="Double Encryption"></h3>
+                        <p data-en="AES-256-GCM combined with XChaCha20-Poly1305 for maximum security" 
+                           data-fr="AES-256-GCM combiné avec XChaCha20-Poly1305 pour une sécurité maximale"></p>
+                    </div>
+                    <div class="feature">
+                        <h3 data-en="Local-First" data-fr="Local d'Abord"></h3>
+                        <p data-en="All secrets stored locally with optional iCloud sync" 
+                           data-fr="Tous les secrets stockés localement avec synchronisation iCloud optionnelle"></p>
+                    </div>
+                    <div class="feature">
+                        <h3 data-en="Native Performance" data-fr="Performance Native"></h3>
+                        <p data-en="Built with SwiftUI for optimal macOS and iOS integration" 
+                           data-fr="Construit avec SwiftUI pour une intégration optimale avec macOS et iOS"></p>
+                    </div>
+                    <div class="feature">
+                        <h3 data-en="Zero Dependencies" data-fr="Zéro Dépendances"></h3>
+                        <p data-en="Uses native CryptoKit for enhanced security" 
+                           data-fr="Utilise CryptoKit natif pour une sécurité renforcée"></p>
+                    </div>
+                    <div class="feature">
+                        <h3 data-en="Professional UI" data-fr="Interface Professionnelle"></h3>
+                        <p data-en="Clean, modern interface designed for developers" 
+                           data-fr="Interface propre et moderne conçue pour les développeurs"></p>
+                    </div>
+                    <div class="feature">
+                        <h3 data-en="Open Source" data-fr="Open Source"></h3>
+                        <p data-en="MIT licensed and community-driven" 
+                           data-fr="Licence MIT et piloté par la communauté"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="support-box">
+                    <h2 data-en="Support" data-fr="Support"></h2>
+                    <p data-en="Need help or found an issue? We're here to assist you." 
+                       data-fr="Besoin d'aide ou trouvé un problème ? Nous sommes là pour vous aider."></p>
+                    <div class="cta-buttons">
+                        <a href="https://github.com/ThePhoenixAgency/SilentKey/issues" class="btn btn-secondary" style="background: white; color: #667eea;" 
+                           data-en="Report an Issue" data-fr="Signaler un Problème"></a>
+                        <a href="https://github.com/ThePhoenixAgency/SilentKey/discussions" class="btn btn-secondary" style="background: white; color: #667eea;" 
+                           data-en="Community Discussions" data-fr="Discussions Communautaires"></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 data-en="Requirements" data-fr="Prérequis"></h2>
+                <ul style="list-style-position: inside; font-size: 1.1em;">
+                    <li data-en="macOS 13.0 or later" data-fr="macOS 13.0 ou ultérieur"></li>
+                    <li data-en="iOS 16.0 or later" data-fr="iOS 16.0 ou ultérieur"></li>
+                    <li data-en="Swift 5.9 or later" data-fr="Swift 5.9 ou ultérieur"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p data-en="Developed by" data-fr="Développé par"> <strong>PhoenixProject</strong></p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/ThePhoenixAgency" data-en="GitHub Organization" data-fr="Organisation GitHub"></a> |
+                <a href="https://ThePhoenixAgency.github.io" data-en="Website" data-fr="Site Web"></a>
+            </p>
+            <p style="margin-top: 20px; opacity: 0.8;" data-en="© 2025 PhoenixProject. MIT License." data-fr="© 2025 PhoenixProject. Licence MIT."></p>
+        </div>
+    </footer>
+    
+    <script>
+        let currentLang = 'en';
+        
+        function switchLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('[data-en]').forEach(el => {
+                if (lang === 'en') {
+                    el.textContent = el.getAttribute('data-en');
+                } else {
+                    el.textContent = el.getAttribute('data-fr');
+                }
+            });
+        }
+        
+        // Initialize with English
+        switchLang('en');
+    </script>
+</body>
+</html>
