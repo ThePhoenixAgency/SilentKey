@@ -8,7 +8,7 @@
 -->
 <plist version="1.0">
 <dict>
-    <!-- Identification de l'application -->
+    <!-- Application identification -->
     <key>CFBundleExecutable</key>
     <string>SilentKey</string>
     
