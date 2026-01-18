@@ -2,8 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
     SilentKey Info.plist
-    Métadonnées et configuration de l'application macOS
-    
+    Metadata and configuration for the macOS application    
     Author: PhoenixProject
     Website: http://ThePhoenixAgency.github.io
 -->
@@ -32,11 +31,11 @@
     <key>CFBundleVersion</key>
     <string>1</string>
     
-    <!-- Informations sur le développeur -->
+    <!-- Developer information -->
     <key>NSHumanReadableCopyright</key>
     <string>© 2025 PhoenixProject. All rights reserved.</string>
     
-    <!-- Configuration minimum -->
+    <!-- Minimum configuration -->
     <key>LSMinimumSystemVersion</key>
     <string>13.0</string>
     
