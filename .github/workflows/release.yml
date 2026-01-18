@@ -1,6 +1,6 @@
 #
 # SilentKey Release Workflow
-# Workflow GitHub Actions pour build, tests, signature et publication automatique
+# Workflow GitHub Actions for build, tests, signature and automatic publication, tests, signature et publication automatique
 #
 # Author: PhoenixProject
 # Website: http://ThePhoenixAgency.github.io
@@ -50,7 +50,7 @@ jobs:
         
       - name: Run security scan
         run: |
-          # Scanner les vulnérabilités CVE connues
+          # for build, teScan for known CVE vulnerabilitiessts, signature and automatic publication vulnérabilités CVE connues
           brew install trivy
           trivy fs --severity HIGH,CRITICAL .
           
@@ -69,12 +69,12 @@ jobs:
           CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE }}
           CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
         run: |
-          # Créer keychain temporaire
+          # Create temporary keychain temporaire
           security create-keychain -p "$CERTIFICATE_PASSWORD" build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p "$CERTIFICATE_PASSWORD" build.keychain
           
-          # Importer le certificat
+          # Import certificate
           echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
           security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$CERTIFICATE_PASSWORD" build.keychain
@@ -91,7 +91,7 @@ jobs:
       - name: Create DMG
         run: |
           mkdir -p dist
-          # Créer DMG pour distribution
+          # Create DMG for distribution pour distribution
           hdiutil create -volname "SilentKey" -srcfolder .build/release/SilentKey.app -ov -format UDZO dist/SilentKey-${{ github.ref_name }}.dmg
           
       - name: Sign DMG
@@ -106,10 +106,10 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           TEAM_ID: ${{ secrets.TEAM_ID }}
         run: |
-          # Notariser avec Apple
+          # Notarize with Apple
           xcrun notarytool submit dist/SilentKey-${{ github.ref_name }}.dmg --apple-id "$APPLE_ID" --password "$APPLE_PASSWORD" --team-id "$TEAM_ID" --wait
           
-          # Agrafer le ticket de notarisation
+          # Staple notarization ticket de notarisation
           xcrun stapler staple dist/SilentKey-${{ github.ref_name }}.dmg
           
       - name: Upload artifact
@@ -144,6 +144,6 @@ jobs:
           
       - name: Update appcast.xml
         run: |
-          # Mettre à jour le fichier appcast avec la nouvelle version
+          # Update appcast file with new version avec la nouvelle version
           echo "Appcast updated for version ${{ github.ref_name }}"
-          # TODO: Automatiser la mise à jour de appcast.xml
+          # TODO: Automate appcast.xml update à jour de appcast.xml
