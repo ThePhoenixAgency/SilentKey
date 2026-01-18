@@ -1,7 +1,5 @@
 // swift-tools-version: 5.9
-// Package manifest pour SilentKey
-// Compatible iOS 16+ et macOS 13+
-
+// Compatible iOS 16+ and macOS 13+
 import PackageDescription
 
 let package = Package(
@@ -21,8 +19,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        // Pas de dépendances externes pour maximiser la sécurité
-        // Crypto natif via CryptoKit
+                // Native crypto via CryptoKit
     ],
     targets: [
         // MARK: - App Target
