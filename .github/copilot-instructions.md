@@ -5,7 +5,7 @@
 ### ❌ INTERDIT ABSOLUMENT
 
 1. **Ne JAMAIS ajouter:**
-   - Analytics (Google Analytics, Mixpanel, etc.)
+   - Analytics (Google Analytics, Mixpanel, etc.)/Emojis
    - Trackers de quelque nature que ce soit
    - Cookies non essentiels
    - Télémétrie
@@ -36,7 +36,7 @@
 - **ACID**: Atomicité, Cohérence, Isolation, Durabilité pour les transactions
 
 #### Standards Swift
-- Commentaires en français pour le code métier
+- Commentaires en français/anglais pour le code métier
 - DocStrings complets pour toutes les fonctions publiques
 - Gestion d'erreurs explicite avec `throws` et `Result`
 - Immutabilité par défaut (`let` avant `var`)

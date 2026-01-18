@@ -7,7 +7,7 @@
 Toutes les règles de Copilot s'appliquent à Claude:
 
 ### Résumé des interdictions
-- ❌ JAMAIS analytics/trackers/cookies/télémétrie
+- ❌ JAMAIS analytics/trackers/cookies/télémétrie/Emojis
 - ❌ JAMAIS modifier logos/branding
 - ❌ JAMAIS violer RGPD
 - ❌ JAMAIS ralentir le code
