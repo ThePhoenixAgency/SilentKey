@@ -4,12 +4,11 @@
 
 **Local-first developer secrets vault with double-layer encryption**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20macOS-lightgrey.svg)](https://github.com/EthanThePhoenix38/SilentKey)
+[![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20macOS-lightgrey.svg)](https://github.com/ThePhoenixAgency/SilentKey)
 [![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org)
 [![SwiftUI](https://img.shields.io/badge/SwiftUI-5.0-blue.svg)](https://developer.apple.com/xcode/swiftui/)
 
-[English](#english) | [Français](#français)
+[English](#english) | [Francais](#francais)
 
 </div>
 
@@ -23,7 +22,7 @@ SilentKey is a professional, local-first secrets vault designed specifically for
 
 ### Key Features
 
-- **Double-Layer Encryption**: AES-256-GCM + XChaCha20-Poly1305 for maximum security
+- **Double-Layer Encryption**: AES-256-GCM + ChaCha20-Poly1305 for maximum security
 - **Local-First Architecture**: All data stays on your device, no cloud sync required
 - **Cross-Platform**: Native SwiftUI app for iOS 16+ and macOS 13+
 - **Biometric Authentication**: Touch ID / Face ID integration
@@ -31,95 +30,99 @@ SilentKey is a professional, local-first secrets vault designed specifically for
 - **Zero Telemetry**: No tracking, no analytics, no data collection
 - **Modern UI**: Professional, clean interface with dark mode support
 - **Export/Import**: Encrypted backup and restore functionality
+- **Project Management**: Link secrets to projects with multiple relations
+- **Smart Trash**: 30-day retention with automatic conflict resolution
+- **Push Notifications**: Native macOS alerts for security events
+- **Apple Intelligence**: On-device AI for smart suggestions (macOS 15+)
+- **HaveIBeenPwned**: Automatic password breach detection
 
 ### Security Model
 
-#### Encryption Layers
+**Encryption Layers:**
+1. **Layer 1 - Field Level**: AES-256-GCM for individual secret fields
+2. **Layer 2 - Container**: ChaCha20-Poly1305 for the entire vault
+3. **Key Derivation**: Argon2id for master key generation
 
-**Layer 1: Vault-Level Encryption**
-- Algorithm: AES-256-GCM
-- Key Derivation: Argon2id (600,000 iterations, 16-byte salt)
-- Master key never stored, derived from password on each unlock
-
-**Layer 2: Item-Level Encryption**
-- Algorithm: XChaCha20-Poly1305
-- Per-item keys derived via HKDF-SHA512
-- Independent encryption for each secret entry
-
-#### Key Management
-```
-User Password → Argon2id → Master Key → HKDF → [Vault Key | Item Seed]
-                                              ↓              ↓
-                                        DB Encryption   Per-Item Keys
-```
+**Security Principles:**
+- Zero plaintext storage on disk
+- RAM-only decryption with automatic cleanup
+- Sandboxed macOS environment
+- Code signing and notarization (macOS 10.15+)
+- OWASP compliance
 
 ### Supported Secret Types
 
-- **API Keys**: REST APIs, GraphQL, third-party services
-- **Tokens**: JWT, OAuth, Bearer tokens, refresh tokens
-- **Credentials**: Username/password, database connections
-- **SSH Keys**: Private keys, passphrases, connection details
-- **Generic Secrets**: Environment variables, config values, notes
+- API Keys (REST, GraphQL, OAuth, JWT, Bearer)
+- SSH Keys (RSA, ED25519, ECDSA, DSA)
+- Database Credentials (PostgreSQL, MySQL, MongoDB, Redis)
+- Cloud Provider Credentials (AWS, Azure, GCP, DigitalOcean)
+- Banking Information (encrypted account details)
+- Credit Cards (encrypted)
+- Secure Notes
+- Certificates (SSL/TLS)
+- License Keys
+- Custom Types (extensible via plugins)
 
-### Installation
-
-#### Requirements
-- iOS 16.0+ or macOS 13.0+
-- Xcode 15.0+
-- Swift 5.9+
-
-#### Build from Source
+### Build from Source
 
 ```bash
-git clone https://github.com/EthanThePhoenix38/SilentKey.git
+git clone https://github.com/ThePhoenixAgency/SilentKey.git
 cd SilentKey
 open SilentKey.xcodeproj
 ```
 
 1. Select your target (iOS or macOS)
-2. Build and run (⌘R)
+2. Build and run (Cmd+R)
 
 ### Architecture
 
 ```
 SilentKey/
-├── SilentKeyApp/          # Main app entry point
+├── SilentKeyApp/          # Main app entry
 ├── Core/                  # Core infrastructure
-│   ├── Crypto/           # Encryption modules
-│   ├── Models/           # Data models
-│   ├── Security/         # Security utilities
-│   └── Errors/           # Error handling
-├── Features/             # Feature modules
-│   ├── Secrets/          # Secret management
-│   ├── ApiKeys/          # API key handling
-│   ├── Tokens/           # Token management
-│   ├── Credentials/      # Credentials
-│   ├── SSH/              # SSH key management
-│   ├── Backup/           # Export/import
-│   ├── Settings/         # App settings
-│   └── QuickSearch/      # Global search
-├── Infrastructure/       # Infrastructure layer
-│   ├── Persistence/      # Local storage
-│   ├── Keychain/         # Keychain integration
-│   └── Biometrics/       # Face ID / Touch ID
-├── UI/                   # Shared UI components
-└── Docs/                 # Documentation
-    ├── en/               # English docs
-    └── fr/               # French docs
+│   ├── Crypto/            # Encryption modules
+│   ├── Models/            # Data models
+│   ├── Security/          # Security utilities
+│   └── Errors/            # Error handling
+├── Features/              # Feature modules
+│   ├── Secrets/           # Secret management
+│   ├── ApiKeys/           # API key handling
+│   ├── Tokens/            # Token management
+│   ├── Credentials/       # Credentials
+│   ├── SSH/               # SSH key manager
+│   ├── Backup/            # Export/import
+│   ├── Settings/          # App settings
+│   └── QuickSearch/       # Global search
+├── Infrastructure/        # Infrastructure
+│   ├── Persistence/       # Local storage
+│   ├── Keychain/          # Keychain integration
+│   └── Biometrics/        # Face ID / Touch ID
+├── UI/                    # Shared UI components
+└── Docs/                  # Documentation
+    ├── en/                # English docs
+    └── fr/                # French docs
 ```
 
-### Roadmap
+### Documentation
 
-- [x] Core encryption engine
-- [x] iOS + macOS support
-- [x] Biometric authentication
-- [ ] iCloud encrypted sync (optional)
-- [ ] Browser extension (autofill)
-- [ ] CLI tool
-- [ ] Team sharing (E2E encrypted)
-- [ ] Password generator
-- [ ] Import from .env files
-- [ ] Export to various formats
+- [Architecture Guide](docs/ARCHITECTURE.md)
+- [Templates & Plugins](docs/TEMPLATES.md)
+- [Development Roadmap](docs/BACKLOG.md)
+
+### Features
+
+- Secure vault for all developer secrets
+- Field-level encryption
+- Import/Export encrypted backups
+- Biometric unlock (Touch ID / Face ID)
+- Auto-fill support (macOS)
+- Quick search (Cmd+K)
+- Dark mode
+- Multiple vaults
+- Team sharing (E2E encrypted)
+- Password generator
+- Import from .env files
+- Export to various formats
 
 ### Contributing
 
@@ -127,132 +130,119 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for gu
 
 ### Security
 
-Found a vulnerability? Please email security@silentkey.dev or open a private security advisory.
+For security vulnerabilities, please open a private security advisory on GitHub or submit an issue.
 
 ### License
 
-MIT License - see [LICENSE](LICENSE) for details.
+Commercial License - see [LICENSE](LICENSE) for details.
+
+### Support
+
+For support requests:
+- Submit an issue on GitHub: https://github.com/ThePhoenixAgency/SilentKey/issues
+- Use the in-app support form (coming soon)
 
 ---
 
-## Français
+## Francais
 
-### Aperçu
+### Vue d'ensemble
 
-SilentKey est un coffre-fort professionnel local-first conçu spécifiquement pour les développeurs qui doivent gérer en toute sécurité des clés API, tokens, identifiants, clés SSH et données sensibles. Construit avec SwiftUI, il fonctionne nativement sur iOS et macOS sans dépendance cloud, sans télémétrie et en toute transparence.
+SilentKey est un coffre-fort professionnel de secrets, local-first, concu specifiquement pour les developpeurs qui doivent gerer de maniere securisee des cles API, tokens, identifiants, cles SSH et donnees sensibles. Construit avec SwiftUI, il fonctionne nativement sur iOS et macOS sans dependance cloud, sans telemetrie et avec une transparence complete.
 
-### Fonctionnalités Principales
+### Fonctionnalites principales
 
-- **Chiffrement Double Couche**: AES-256-GCM + XChaCha20-Poly1305 pour une sécurité maximale
-- **Architecture Local-First**: Toutes les données restent sur votre appareil, pas de sync cloud requis
-- **Multi-Plateforme**: App SwiftUI native pour iOS 16+ et macOS 13+
-- **Authentification Biométrique**: Intégration Touch ID / Face ID
-- **Orienté Développeurs**: Optimisé pour clés API, tokens, credentials, clés SSH, connexions DB
-- **Zéro Télémétrie**: Pas de tracking, pas d'analytics, pas de collecte de données
-- **Interface Moderne**: Interface professionnelle et épurée avec support du mode sombre
-- **Export/Import**: Fonctionnalité de sauvegarde et restauration chiffrée
+- **Chiffrement double couche**: AES-256-GCM + ChaCha20-Poly1305 pour une securite maximale
+- **Architecture Local-First**: Toutes les donnees restent sur votre appareil, pas de sync cloud
+- **Multi-plateforme**: Application SwiftUI native pour iOS 16+ et macOS 13+
+- **Authentification biometrique**: Integration Touch ID / Face ID
+- **Oriente developpeurs**: Optimise pour cles API, tokens, identifiants, cles SSH, connexions BDD
+- **Zero telemetrie**: Aucun tracking, aucune analytique, aucune collecte de donnees
+- **Interface moderne**: Interface professionnelle et epuree avec support du mode sombre
+- **Export/Import**: Fonctionnalite de sauvegarde et restauration chiffree
+- **Gestion projets**: Liaison de secrets a des projets avec relations multiples
+- **Corbeille intelligente**: Retention 30 jours avec resolution automatique des conflits
+- **Notifications push**: Alertes macOS natives pour evenements securite
+- **Apple Intelligence**: IA on-device pour suggestions intelligentes (macOS 15+)
+- **HaveIBeenPwned**: Detection automatique des fuites de mots de passe
 
-### Modèle de Sécurité
+### Modele de securite
 
-#### Couches de Chiffrement
+**Couches de chiffrement:**
+1. **Couche 1 - Niveau champ**: AES-256-GCM pour les champs individuels
+2. **Couche 2 - Conteneur**: ChaCha20-Poly1305 pour l'ensemble du coffre
+3. **Derivation de cles**: Argon2id pour generation cle maitre
 
-**Couche 1 : Chiffrement au Niveau du Coffre**
-- Algorithme : AES-256-GCM
-- Dérivation de Clé : Argon2id (600 000 itérations, sel de 16 octets)
-- Clé maître jamais stockée, dérivée du mot de passe à chaque déverrouillage
+**Principes de securite:**
+- Zero stockage en clair sur disque
+- Dechiffrement en RAM uniquement avec nettoyage automatique
+- Environnement macOS en sandbox
+- Signature de code et notarisation (macOS 10.15+)
+- Conformite OWASP
 
-**Couche 2 : Chiffrement au Niveau des Éléments**
-- Algorithme : XChaCha20-Poly1305
-- Clés par élément dérivées via HKDF-SHA512
-- Chiffrement indépendant pour chaque entrée secrète
+### Types de secrets supportes
 
-#### Gestion des Clés
-```
-Mot de Passe Utilisateur → Argon2id → Clé Maître → HKDF → [Clé Coffre | Graine Éléments]
-                                                            ↓                ↓
-                                                    Chiffrement DB    Clés par Élément
-```
+- Cles API (REST, GraphQL, OAuth, JWT, Bearer)
+- Cles SSH (RSA, ED25519, ECDSA, DSA)
+- Identifiants BDD (PostgreSQL, MySQL, MongoDB, Redis)
+- Identifiants Cloud (AWS, Azure, GCP, DigitalOcean)
+- Informations bancaires (details de compte chiffres)
+- Cartes bancaires (chiffrees)
+- Notes securisees
+- Certificats (SSL/TLS)
+- Cles de licence
+- Types personnalises (extensible via plugins)
 
-### Types de Secrets Supportés
-
-- **Clés API**: APIs REST, GraphQL, services tiers
-- **Tokens**: JWT, OAuth, Bearer tokens, refresh tokens
-- **Identifiants**: Username/password, connexions base de données
-- **Clés SSH**: Clés privées, passphrases, détails de connexion
-- **Secrets Génériques**: Variables d'environnement, valeurs de config, notes
-
-### Installation
-
-#### Prérequis
-- iOS 16.0+ ou macOS 13.0+
-- Xcode 15.0+
-- Swift 5.9+
-
-#### Compiler depuis les Sources
+### Compiler depuis les sources
 
 ```bash
-git clone https://github.com/EthanThePhoenix38/SilentKey.git
+git clone https://github.com/ThePhoenixAgency/SilentKey.git
 cd SilentKey
 open SilentKey.xcodeproj
 ```
 
-1. Sélectionnez votre cible (iOS ou macOS)
-2. Compilez et lancez (⌘R)
+1. Selectionnez votre cible (iOS ou macOS)
+2. Compiler et executer (Cmd+R)
 
-### Architecture
+### Documentation
 
-```
-SilentKey/
-├── SilentKeyApp/          # Point d'entrée principal
-├── Core/                  # Infrastructure de base
-│   ├── Crypto/           # Modules de chiffrement
-│   ├── Models/           # Modèles de données
-│   ├── Security/         # Utilitaires de sécurité
-│   └── Errors/           # Gestion des erreurs
-├── Features/             # Modules fonctionnels
-│   ├── Secrets/          # Gestion des secrets
-│   ├── ApiKeys/          # Gestion des clés API
-│   ├── Tokens/           # Gestion des tokens
-│   ├── Credentials/      # Identifiants
-│   ├── SSH/              # Gestion des clés SSH
-│   ├── Backup/           # Export/import
-│   ├── Settings/         # Paramètres de l'app
-│   └── QuickSearch/      # Recherche globale
-├── Infrastructure/       # Couche infrastructure
-│   ├── Persistence/      # Stockage local
-│   ├── Keychain/         # Intégration Keychain
-│   └── Biometrics/       # Face ID / Touch ID
-├── UI/                   # Composants UI partagés
-└── Docs/                 # Documentation
-    ├── en/               # Docs anglais
-    └── fr/               # Docs français
-```
+- [Guide d'architecture](docs/ARCHITECTURE.md)
+- [Templates & Plugins](docs/TEMPLATES.md)
+- [Feuille de route](docs/BACKLOG.md)
 
-### Feuille de Route
+### Fonctionnalites
 
-- [x] Moteur de chiffrement principal
-- [x] Support iOS + macOS
-- [x] Authentification biométrique
-- [ ] Sync iCloud chiffré (optionnel)
-- [ ] Extension navigateur (autofill)
-- [ ] Outil CLI
-- [ ] Partage d'équipe (E2E chiffré)
-- [ ] Générateur de mots de passe
-- [ ] Import depuis fichiers .env
-- [ ] Export vers différents formats
+- Coffre-fort securise pour tous les secrets developpeur
+- Chiffrement au niveau des champs
+- Import/Export de sauvegardes chiffrees
+- Deverrouillage biometrique (Touch ID / Face ID)
+- Support auto-remplissage (macOS)
+- Recherche rapide (Cmd+K)
+- Mode sombre
+- Plusieurs coffres
+- Partage d'equipe (E2E chiffre)
+- Generateur de mots de passe
+- Import depuis fichiers .env
+- Export vers differents formats
 
 ### Contribution
 
 Les contributions sont les bienvenues ! Veuillez lire [CONTRIBUTING.md](CONTRIBUTING.md) pour les directives.
 
-### Sécurité
+### Securite
 
-Vous avez trouvé une vulnérabilité ? Veuillez envoyer un email à security@silentkey.dev ou ouvrir un avis de sécurité privé.
+Pour les vulnerabilites de securite, veuillez ouvrir un avis de securite prive sur GitHub ou soumettre une issue.
 
 ### Licence
 
-Licence MIT - voir [LICENSE](LICENSE) pour les détails.
+Licence Commerciale - voir [LICENSE](LICENSE) pour les details.
+
+### Support
+
+Pour les demandes de support:
+- Soumettez une issue sur GitHub: https://github.com/ThePhoenixAgency/SilentKey/issues
+- Utilisez le formulaire de support dans l'application (a venir)
 
 ---
 
-**Built with ❤️ for developers who value privacy and security**
+Developped by ThePhoenixAgency for professional developers.
