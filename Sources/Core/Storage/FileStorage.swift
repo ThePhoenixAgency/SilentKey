@@ -265,7 +265,7 @@ actor FileStorage {
 
 // MARK: - Supporting Types
 
-struct TrashMetadata: Codable {
+public struct TrashMetadata: Codable {
     let originalID: UUID
     let deletedDate: Date
     let expirationDate: Date
@@ -273,7 +273,7 @@ struct TrashMetadata: Codable {
 
 // MARK: - Storage Errors
 
-enum StorageError: LocalizedError {
+public enum StorageError: LocalizedError {
     case writeFailed(Error)
     case readFailed(Error)
     case deleteFailed(Error)

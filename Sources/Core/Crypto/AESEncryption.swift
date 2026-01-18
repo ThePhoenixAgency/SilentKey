@@ -30,7 +30,10 @@ public struct AESEncryptionService {
     /// - Returns: Données chiffrées avec nonce et tag intégrés.
     public static func encrypt(_ plaintext: Data, with key: SymmetricKey) throws -> Data {
         let sealedBox = try AES.GCM.seal(plaintext, using: key)
-        return sealedBox.combined!
+        guard let combinedData = sealedBox.combined else {
+            throw EncryptionError.encryptionFailed
+        }
+        return combinedData
     }
     
     /// Déchiffre des données AES-256-GCM.

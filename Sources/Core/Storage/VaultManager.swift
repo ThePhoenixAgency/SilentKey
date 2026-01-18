@@ -98,10 +98,9 @@ actor VaultManager {
         
         logger.log("Mise à jour de l'item: \(item.title)", level: .info, category: .storage)
         
-        // Créer une nouvelle version
+        // Créer une nouvelle version avec modifiedAt mis à jour
         var updatedItem = item
-        updatedItem.version += 1
-        updatedItem.lastModified = Date()
+        updatedItem.modifiedAt = Date()
         
         // Chiffrer et sauvegarder
         let encryptedData = try await encryptionManager.encrypt(updatedItem, using: key)
@@ -186,7 +185,7 @@ actor VaultManager {
 
 // MARK: - Vault Errors
 
-enum VaultError: LocalizedError {
+public enum VaultError: LocalizedError {
     case vaultLocked
     case invalidMasterPassword
     case itemNotFound

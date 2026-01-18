@@ -219,7 +219,7 @@ actor TrashManager {
 // MARK: - Supporting Types
 
 /// Représente un item dans la poubelle
-struct TrashItem: Identifiable {
+public struct TrashItem: Identifiable {
     let id: UUID
     let deletedDate: Date
     let expirationDate: Date
@@ -236,7 +236,7 @@ struct TrashItem: Identifiable {
 
 // MARK: - Trash Errors
 
-enum TrashError: LocalizedError {
+public enum TrashError: LocalizedError {
     case itemNotInTrash
     case itemAlreadyExpired
     case restoreConflict
