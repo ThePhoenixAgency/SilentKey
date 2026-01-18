@@ -8,7 +8,7 @@
 import Foundation
 import os.log
 
-private let logger = Logger(subsystem: "com.thephoenixagency.silentkey", category: "SecurityKeys")
+private let logger = os.Logger(subsystem: "com.thephoenixagency.silentkey", category: "SecurityKeys")
 
 public struct SecurityKey: Identifiable, Codable {
     public let id: UUID

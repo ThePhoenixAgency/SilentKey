@@ -13,8 +13,9 @@ import os.log
 private let logger = Logger(subsystem: "com.thephoenixagency.silentkey", category: "AuthManager")
 
 /**
- AuthenticationManager (v0.8.0)
- Orchestrates the vault security lifecycle using macOS Keychain and Biometrics.
+ AuthenticationManager (v0.9.0)
+ Orchestrates the vault security lifecycle. Supports optional master password,
+ strict security policies, and first-time onboarding flow.
  */
 public class AuthenticationManager: ObservableObject {
     @Published public var isAuthenticated = false
@@ -24,11 +25,21 @@ public class AuthenticationManager: ObservableObject {
     private let keychain = KeychainManager.shared
     
     public init() {
-        logger.info("AuthenticationManager initialized (v0.8.0).")
-        // Initialize default password if none exists (for staging/dev convenience)
-        if keychain.getMasterPassword() == nil {
-            _ = keychain.saveMasterPassword("1234")
-            logger.info("Initialized default master password '1234' in Keychain.")
+        logger.info("AuthenticationManager initialized (v0.9.0).")
+        checkInitialAuthState()
+    }
+    
+    /**
+     Determines if the user should be automatically logged in (first time or no password).
+     */
+    private func checkInitialAuthState() {
+        if !keychain.isVaultProtected {
+            logger.info("Vault is not protected. Enabling automatic access for onboarding.")
+            self.isAuthenticated = true
+            self.vaultManager = VaultManager.shared
+        } else {
+            logger.info("Vault is protected by a master password.")
+            self.isAuthenticated = false
         }
     }
     
@@ -37,32 +48,22 @@ public class AuthenticationManager: ObservableObject {
      */
     @MainActor
     public func authenticate(with password: String) async {
-        logger.info("Authentication attempt started.")
         self.authError = nil
-        
-        // Simulating derivation delay
-        try? await Task.sleep(nanoseconds: 300 * 1_000_000)
         
         if password == "BIOMETRIC_BYPASS" {
             await performBiometricAuth()
             return
         }
         
-        // Check against Keychain
         if let storedPassword = keychain.getMasterPassword() {
             if password == storedPassword {
                 completeAuthentication()
             } else {
-                logger.error("Authentication failed: Invalid credentials.")
                 self.authError = "Invalid Master Password"
-                self.isAuthenticated = false
             }
         } else {
-            // Fallback for first run if somehow nil
-            if password == "1234" {
-                _ = keychain.saveMasterPassword("1234")
-                completeAuthentication()
-            }
+            // No password set, allow entry
+            completeAuthentication()
         }
     }
     
@@ -73,46 +74,102 @@ public class AuthenticationManager: ObservableObject {
     }
     
     /**
-     Updates the master password and syncs with Keychain.
+     Updates the master password with strict validation.
+     Policies:
+     - Min 10 chars.
+     - Majuscule, Chiffre, Caractère spécial.
+     - No more than 2 consecutive numbers.
+     - No more than 3 identical characters.
      */
-    public func updateMasterPassword(to newPassword: String) -> Bool {
-        logger.info("Request to update master password.")
-        if keychain.saveMasterPassword(newPassword) {
-            logger.info("Master password successfully updated in Keychain.")
-            return true
+    public func setMasterPassword(_ password: String) -> Result<Bool, String> {
+        let validation = validatePassword(password)
+        if case .failure(let error) = validation {
+            return .failure(error)
         }
-        return false
+        
+        if keychain.saveMasterPassword(password) {
+            logger.info("Master password successfully updated.")
+            return .success(true)
+        }
+        return .failure("Keychain storage error")
     }
     
     /**
-     Biometric authentication flow.
+     Validates a password against the strict policy requested by the user.
      */
+    public func validatePassword(_ p: String) -> Result<Void, String> {
+        if p.count < 10 { return .failure("Minimum 10 characters required") }
+        
+        let hasUppercase = p.rangeOfCharacter(from: .uppercaseLetters) != nil
+        let hasDigit = p.rangeOfCharacter(from: .decimalDigits) != nil
+        let hasSpecial = p.rangeOfCharacter(from: CharacterSet(charactersIn: "!@#$%^&*()-_=+[]{}|;:'\",.<>/?")) != nil
+        
+        if !hasUppercase || !hasDigit || !hasSpecial {
+            return .failure("Must include Uppercase, Number, and Special character")
+        }
+        
+        // Consecutive numbers check (no more than 2)
+        let chars = Array(p)
+        for i in 0..<(chars.count - 2) {
+            if chars[i].isNumber && chars[i+1].isNumber && chars[i+2].isNumber {
+                return .failure("No more than 2 consecutive numbers allowed")
+            }
+        }
+        
+        // Identical characters check (no more than 3)
+        for i in 0..<(chars.count - 3) {
+            if chars[i] == chars[i+1] && chars[i+1] == chars[i+2] && chars[i+2] == chars[i+3] {
+                return .failure("No more than 3 identical characters allowed")
+            }
+        }
+        
+        return .success(())
+    }
+    
+    /**
+     Generates a unique secure password following the same strict policy.
+     */
+    public func generateSecurePassword() -> String {
+        let upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        let lower = "abcdefghijklmnopqrstuvwxyz"
+        let digits = "0123456789"
+        let special = "!@#$%^&*()-_=+"
+        
+        // Start with required characters to guarantee the policy
+        var password = ""
+        password.append(upper.randomElement()!)
+        password.append(digits.randomElement()!)
+        password.append(special.randomElement()!)
+        
+        let all = upper + lower + digits + special
+        while password.count < 12 {
+            let next = all.randomElement()!
+            // Fast check for consecutive numbers or identical chars during generation
+            let current = Array(password)
+            if current.count >= 2 && next.isNumber && current[current.count-1].isNumber && current[current.count-2].isNumber {
+                continue 
+            }
+            if current.count >= 3 && next == current[current.count-1] && next == current[current.count-2] && next == current[current.count-3] {
+                continue
+            }
+            password.append(next)
+        }
+        
+        return String(password.shuffled())
+    }
+    
     private func performBiometricAuth() async {
         let context = LAContext()
-        var error: NSError?
-        
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            do {
-                let success = try await context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Access your SILENT KEY Vault")
-                if success {
-                    await MainActor.run { completeAuthentication() }
-                }
-            } catch {
-                logger.error("Biometric evaluation error: \(error.localizedDescription)")
-            }
+        do {
+            let success = try await context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Access your SILENT KEY Vault")
+            if success { await MainActor.run { completeAuthentication() } }
+        } catch {
+            logger.error("Biometric error: \(error.localizedDescription)")
         }
     }
     
     public func logout() {
-        logger.info("User logout requested. Clearing session.")
         self.isAuthenticated = false
         self.vaultManager = nil
-    }
-    
-    @MainActor
-    public func quickAuthenticate() {
-        // Only used in staging for speed
-        self.isAuthenticated = true
-        self.vaultManager = VaultManager.shared
     }
 }

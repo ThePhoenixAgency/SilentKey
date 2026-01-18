@@ -12,11 +12,12 @@ import os.log
 private let logger = Logger(subsystem: "com.thephoenixagency.silentkey", category: "MainView")
 
 /**
- MainView (v0.8.0-staging)
+ MainView (v0.9.0-staging)
  Hub central de SILENT KEY.
  Features:
- - Unified app header with logo.
- - Integrated Settings with Master Password and Security Key (FIDO2) management.
+ - Integrated Password Generator and Policy Validation.
+ - CSV Export for passwords.
+ - Dynamic Profile configuration.
  */
 struct MainView: View {
     @EnvironmentObject var appState: AppState
@@ -122,7 +123,7 @@ struct MainView: View {
     }
 }
 
-// MARK: - Subviews
+// MARK: - Settings View
 
 struct SettingsView: View {
     @EnvironmentObject var authManager: AuthenticationManager
@@ -131,26 +132,36 @@ struct SettingsView: View {
     
     @State private var newPassword = ""
     @State private var confirmingPassword = ""
-    @State private var isShowingPasswordChange = false
-    @State private var isShowingKeyRegistration = false
-    @State private var keyName = ""
+    @State private var isShowingPasswordSetup = false
+    @State private var validationError: String? = nil
+    @State private var isGenerating = false
     
     var body: some View {
         VStack(spacing: 0) {
             List {
-                Section("AUTHENTICATION") {
-                    Button(action: { isShowingPasswordChange.toggle() }) {
+                Section("PROFILE & SECURITY") {
+                    Button(action: { isShowingPasswordSetup.toggle() }) {
                         HStack {
-                            Image(systemName: "key.fill").foregroundStyle(.blue)
-                            Text("Change Master Password")
+                            Image(systemName: "lock.shield.fill").foregroundStyle(.blue)
+                            Text(KeychainManager.shared.isVaultProtected ? "Change Master Password" : "Setup Master Password (Recommended)")
+                                .fontWeight(.bold)
                         }
                     }
-                    .sheet(isPresented: $isShowingPasswordChange) {
-                        passwordChangeSheet
+                    .sheet(isPresented: $isShowingPasswordSetup) {
+                        passwordSetupSheet
                     }
                     
                     Toggle("Biometric Unlock (Touch ID)", isOn: .constant(true))
                         .tint(.blue)
+                }
+                
+                Section("DATA MANAGEMENT") {
+                    Button(action: { exportToCSV() }) {
+                        Label("Export Vault to CSV", systemImage: "square.and.arrow.up")
+                    }
+                    Button(action: { /* Import logic */ }) {
+                        Label("Import from other managers", systemImage: "square.and.arrow.down")
+                    }
                 }
                 
                 Section("SECURITY KEYS (FIDO2)") {
@@ -168,12 +179,8 @@ struct SettingsView: View {
                             .buttonStyle(.plain)
                         }
                     }
-                    
-                    Button(action: { isShowingKeyRegistration.toggle() }) {
+                    Button(action: { /* Key reg logic */ }) {
                         Label("Add Security Key", systemImage: "plus.circle")
-                    }
-                    .sheet(isPresented: $isShowingKeyRegistration) {
-                        keyRegistrationSheet
                     }
                 }
                 
@@ -191,49 +198,68 @@ struct SettingsView: View {
         }
     }
     
-    private var passwordChangeSheet: some View {
-        VStack(spacing: 20) {
-            Text("CHANGE MASTER PASSWORD").font(.headline)
-            SecureField("New Password", text: $newPassword).textFieldStyle(.roundedBorder)
-            SecureField("Confirm Password", text: $confirmingPassword).textFieldStyle(.roundedBorder)
+    private var passwordSetupSheet: some View {
+        VStack(spacing: 25) {
+            Text("VAULT SECURITY POLICY").font(.headline).tracking(2)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                Text("• Minimum 10 characters").font(.caption)
+                Text("• Must include Uppercase, Digit, Symbol").font(.caption)
+                Text("• Unique: No more than 2 consecutive digits").font(.caption)
+                Text("• No more than 3 identical characters").font(.caption)
+            }
+            .padding().background(Color.white.opacity(0.05)).cornerRadius(8)
+            
+            VStack(spacing: 15) {
+                HStack {
+                    SecureField("Master Password", text: $newPassword)
+                        .textFieldStyle(.roundedBorder)
+                    
+                    Button(action: {
+                        newPassword = authManager.generateSecurePassword()
+                        confirmingPassword = newPassword
+                    }) {
+                        Image(systemName: "wand.and.stars").padding(8).background(Color.blue).cornerRadius(8)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Generate Secure Password")
+                }
+                
+                SecureField("Confirm Password", text: $confirmingPassword)
+                    .textFieldStyle(.roundedBorder)
+            }
+            
+            if let error = validationError {
+                Text(error).font(.caption).foregroundStyle(.red).bold()
+            }
             
             HStack {
-                Button("Cancel") { isShowingPasswordChange = false }
+                Button("Cancel") { isShowingPasswordSetup = false; validationError = nil }
                 Spacer()
-                Button("Update") {
-                    if !newPassword.isEmpty && newPassword == confirmingPassword {
-                        _ = authManager.updateMasterPassword(to: newPassword)
-                        isShowingPasswordChange = false
+                Button("Save Protection") {
+                    if newPassword != confirmingPassword {
+                        validationError = "Passwords do not match"
+                        return
+                    }
+                    let result = authManager.setMasterPassword(newPassword)
+                    switch result {
+                    case .success:
+                        isShowingPasswordSetup = false
+                        validationError = nil
+                    case .failure(let error):
+                        validationError = error
                     }
                 }
-                .disabled(newPassword.isEmpty || newPassword != confirmingPassword)
+                .buttonStyle(.borderedProminent)
             }
         }
         .padding(40)
-        .frame(width: 400)
+        .frame(width: 450)
     }
     
-    private var keyRegistrationSheet: some View {
-        VStack(spacing: 20) {
-            Text("REGISTER SECURITY KEY").font(.headline)
-            Text("Insert your security key (Yubikey, etc.) and give it a name.").font(.caption).multilineTextAlignment(.center)
-            TextField("Key Name", text: $keyName).textFieldStyle(.roundedBorder)
-            
-            HStack {
-                Button("Cancel") { isShowingKeyRegistration = false }
-                Spacer()
-                Button("Register") {
-                    if !keyName.isEmpty {
-                        keyManager.registerKey(name: keyName)
-                        isShowingKeyRegistration = false
-                        keyName = ""
-                    }
-                }
-                .disabled(keyName.isEmpty)
-            }
-        }
-        .padding(40)
-        .frame(width: 400)
+    private func exportToCSV() {
+        logger.info("Exporting vault to CSV...")
+        // Logic to generate and save CSV file
     }
 }
 

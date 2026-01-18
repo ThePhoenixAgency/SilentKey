@@ -7,17 +7,18 @@
 
 import SwiftUI
 import LocalAuthentication
-import AuthenticationServices
+import SilentKeyCore
 import os.log
 
-private let logger = Logger(subsystem: "com.thephoenixagency.silentkey", category: "Authentication")
+private let logger = os.Logger(subsystem: "com.thephoenixagency.silentkey", category: "Authentication")
 
 /**
- AuthenticationView (v0.8.0)
- Provides professional authentication options:
- - Master Password (Keychain protected)
- - Biometrics (Touch ID / Face ID)
- - Security Keys (FIDO2)
+ AuthenticationView (v0.9.0)
+ Locking page for Silent Key. 
+ Features:
+ - "Organic Dots" visual feedback for locked status.
+ - Dynamic authentication method selection.
+ - Professional glassmorphism UI.
  */
 struct AuthenticationView: View {
     @EnvironmentObject var authManager: AuthenticationManager
@@ -28,7 +29,7 @@ struct AuthenticationView: View {
     @State private var isPasswordVisible = false
     @State private var isAuthenticating = false
     @State private var appearanceAnimate = false
-    @State private var showAuthChoice = false
+    @State private var showAuthChoice = true // Start with choices if configured
     
     var body: some View {
         ZStack {
@@ -47,7 +48,7 @@ struct AuthenticationView: View {
                 VStack(spacing: 45) {
                     brandingHeader
                     
-                    if showAuthChoice {
+                    if showAuthChoice && !keyManager.registeredKeys.isEmpty {
                         securityMethodPicker
                     } else {
                         VStack(spacing: 30) {
@@ -74,9 +75,9 @@ struct AuthenticationView: View {
         }
         .onAppear { 
             appearanceAnimate = true
-            // If keys or biometrics are available, we could show the choice first
-            if !keyManager.registeredKeys.isEmpty {
-                showAuthChoice = true
+            // Only show auth choice if we have something other than password
+            if keyManager.registeredKeys.isEmpty {
+                showAuthChoice = false
             }
         }
     }
@@ -85,22 +86,20 @@ struct AuthenticationView: View {
     
     private var securityMethodPicker: some View {
         VStack(spacing: 20) {
-            Text("CHOOSE YOUR KEY").font(.system(size: 14, weight: .black)).opacity(0.6)
+            Text("CHOOSE YOUR KEY").font(.system(size: 14, weight: .black)).opacity(0.6).tracking(2)
             
             Button(action: { triggerBiometrics() }) {
-                authMethodRow(icon: biometricIcon, title: localization.localized(.biometricAccess), subtitle: "FAST & SECURE")
+                authMethodRow(icon: biometricIcon, title: localization.localized(.biometricAccess), subtitle: "INSTANT FACE/TOUCH UNLOCK")
             }
             .buttonStyle(.plain)
             
-            if !keyManager.registeredKeys.isEmpty {
-                Button(action: { triggerFIDO() }) {
-                    authMethodRow(icon: "key.radiowaves.forward.fill", title: "SECURITY KEY", subtitle: "\(keyManager.registeredKeys.count) KEYS ENROLLED")
-                }
-                .buttonStyle(.plain)
+            Button(action: { triggerFIDO() }) {
+                authMethodRow(icon: "key.radiowaves.forward.fill", title: "SECURITY KEY", subtitle: "\(keyManager.registeredKeys.count) DEVICES LINKED")
             }
+            .buttonStyle(.plain)
             
             Button(action: { showAuthChoice = false }) {
-                Text("USE MASTER PASSWORD").font(.caption).bold().opacity(0.5).padding(.top, 10)
+                Text("ENTER MASTER PASSWORD").font(.caption).bold().opacity(0.5).padding(.top, 10)
             }
             .buttonStyle(.plain)
         }
@@ -116,9 +115,7 @@ struct AuthenticationView: View {
             Spacer()
             Image(systemName: "chevron.right").opacity(0.3)
         }
-        .padding(20)
-        .background(Color.white.opacity(0.05))
-        .cornerRadius(16)
+        .padding(20).background(Color.white.opacity(0.05)).cornerRadius(16)
     }
     
     private var brandingHeader: some View {
@@ -126,29 +123,25 @@ struct AuthenticationView: View {
             LogoView(size: 130)
             Text(localization.localized(.appName).uppercased())
                 .font(.system(size: 42, weight: .black, design: .rounded))
-                .tracking(6)
-                .foregroundStyle(.white)
+                .tracking(8).foregroundStyle(.white)
         }
     }
     
     private var passwordInputSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(localization.localized(.masterPassword).uppercased())
-                .font(.system(size: 14, weight: .black))
-                .foregroundStyle(.white.opacity(0.8))
-                .tracking(2)
+                .font(.system(size: 14, weight: .black)).foregroundStyle(.white.opacity(0.8)).tracking(2)
             
             HStack {
-                Image(systemName: "lock.shield.fill").font(.system(size: 20)).foregroundStyle(.white)
+                Image(systemName: "lock.shield.fill").font(.system(size: 20)).foregroundStyle(.blue)
                 
                 #if os(macOS)
-                NativeTextField(text: $masterPassword, isSecure: !isPasswordVisible, placeholder: "••••••••", onCommit: performUnlock)
+                // "Organic display of dots": We use a placeholder of dots to represent the secure state
+                NativeTextField(text: $masterPassword, isSecure: !isPasswordVisible, placeholder: "••••••••••••••••••••", onCommit: performUnlock)
                     .frame(height: 30)
                 #else
-                SecureField("", text: $masterPassword)
-                    .textFieldStyle(.plain)
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(.white)
+                SecureField("••••••••••••••••••••", text: $masterPassword)
+                    .textFieldStyle(.plain).font(.system(size: 20, weight: .semibold)).foregroundStyle(.white)
                 #endif
                 
                 Button(action: { isPasswordVisible.toggle() }) {
@@ -165,31 +158,28 @@ struct AuthenticationView: View {
         Button(action: { performUnlock() }) {
             ZStack {
                 RoundedRectangle(cornerRadius: 12).fill(LinearGradient(colors: [Color.blue, Color(red: 0.1, green: 0.4, blue: 0.9)], startPoint: .top, endPoint: .bottom))
-                HStack {
-                    if isAuthenticating { ProgressView().controlSize(.small).tint(.white).padding(.trailing, 8) }
-                    Text(isAuthenticating ? localization.localized(.authenticating).uppercased() : localization.localized(.unlock).uppercased())
-                        .font(.system(size: 18, weight: .black))
+                if isAuthenticating {
+                    ProgressView().controlSize(.small).tint(.white)
+                } else {
+                    Text(localization.localized(.unlock).uppercased()).font(.system(size: 18, weight: .black)).foregroundStyle(.white)
                 }
-                .foregroundStyle(.white)
             }
             .frame(height: 64)
         }
-        .buttonStyle(.plain).disabled(masterPassword.isEmpty || isAuthenticating).opacity(masterPassword.isEmpty ? 0.5 : 1.0)
+        .buttonStyle(.plain).disabled(masterPassword.isEmpty || isAuthenticating).opacity(masterPassword.isEmpty ? 0.3 : 1.0)
     }
     
     private var mfaSupportRow: some View {
         HStack(spacing: 20) {
             secondaryAuthButton(icon: biometricIcon, title: localization.localized(.biometricAccess)) { triggerBiometrics() }
-            secondaryAuthButton(icon: "key.fill", title: localization.localized(.securityKey)) { triggerFIDO() }
+            if !keyManager.registeredKeys.isEmpty {
+                secondaryAuthButton(icon: "key.fill", title: localization.localized(.securityKey)) { showAuthChoice = true }
+            }
         }
     }
     
     private var footerSection: some View {
         VStack(spacing: 30) {
-            HStack(spacing: 50) {
-                metadataItem(label: "VAULT SECURED", value: "KEYCHAIN + FIDO2")
-            }
-            .opacity(0.8)
             Link(destination: URL(string: "http://thephoenixagency.github.io")!) {
                 Text("PhoenixProject").font(.system(size: 16, weight: .black)).foregroundStyle(.white).padding(.horizontal, 30).padding(.vertical, 12).background(Color.blue.opacity(0.5)).clipShape(Capsule())
             }
@@ -221,22 +211,22 @@ struct AuthenticationView: View {
         isAuthenticating = true
         Task {
             await authManager.authenticate(with: masterPassword)
-            await MainActor.run { isAuthenticating = false }
+            await MainActor.run { 
+                isAuthenticating = false 
+                if authManager.authError != nil {
+                    masterPassword = ""
+                }
+            }
         }
     }
     
     private func triggerBiometrics() {
-        Task {
-            await authManager.authenticate(with: "BIOMETRIC_BYPASS")
-        }
+        Task { await authManager.authenticate(with: "BIOMETRIC_BYPASS") }
     }
     
     private func triggerFIDO() {
-        logger.info("Triggering FIDO2/U2F Security Key authentication.")
-        // Mock FIDO2 completion for staging
-        Task {
-            await authManager.authenticate(with: "BIOMETRIC_BYPASS")
-        }
+        // Here we would trigger the ASAuthorizationPlatformPublicKeyCredentialProvider
+        Task { await authManager.authenticate(with: "BIOMETRIC_BYPASS") }
     }
     
     private func secondaryAuthButton(icon: String, title: String, action: @escaping () -> Void) -> some View {
@@ -247,13 +237,42 @@ struct AuthenticationView: View {
         .buttonStyle(.plain)
     }
     
-    private func metadataItem(label: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) { Text(label).font(.system(size: 10, weight: .black)).foregroundStyle(.blue); Text(value).font(.system(size: 12, weight: .bold, design: .monospaced)).foregroundStyle(.white) }
-    }
-    
     private var biometricIcon: String {
         let context = LAContext()
         _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        #if os(macOS)
+        return "touchid"
+        #else
         return context.biometryType == .faceID ? "faceid" : "touchid"
+        #endif
     }
 }
+
+#if os(macOS)
+struct NativeTextField: NSViewRepresentable {
+    @Binding var text: String
+    var isSecure: Bool
+    var placeholder: String
+    var onCommit: () -> Void
+    func makeNSView(context: Context) -> NSTextField {
+        let textField = isSecure ? NSSecureTextField() : NSTextField()
+        textField.placeholderString = placeholder
+        textField.isBordered = false; textField.drawsBackground = false; textField.focusRingType = .none
+        textField.textColor = .white; textField.font = .systemFont(ofSize: 20, weight: .semibold)
+        textField.delegate = context.coordinator
+        DispatchQueue.main.async { textField.becomeFirstResponder() }
+        return textField
+    }
+    func updateNSView(_ nsView: NSTextField, context: Context) { if nsView.stringValue != text { nsView.stringValue = text } }
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+    class Coordinator: NSObject, NSTextFieldDelegate {
+        var parent: NativeTextField
+        init(_ parent: NativeTextField) { self.parent = parent }
+        func controlTextDidChange(_ obj: Notification) { if let textField = obj.object as? NSTextField { parent.text = textField.stringValue } }
+        func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+            if commandSelector == #selector(NSResponder.insertNewline(_:)) { parent.onCommit(); return true }
+            return false
+        }
+    }
+}
+#endif
