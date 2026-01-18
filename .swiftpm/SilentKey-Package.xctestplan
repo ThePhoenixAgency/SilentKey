@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "86DBA0CF-7C5C-4C77-B1DA-42F46A4BD664",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:",
+      "identifier" : "SilentKey",
+      "name" : "SilentKey"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SilentKeyTests",
+        "name" : "SilentKeyTests"
+      }
+    }
+  ],
+  "version" : 1
+}

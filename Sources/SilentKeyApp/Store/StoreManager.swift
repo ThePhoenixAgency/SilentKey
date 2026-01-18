@@ -243,7 +243,7 @@ public final class StoreManager: ObservableObject {
     }
     
     /// Vérifie la validité d'une transaction
-    private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
+    private nonisolated func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
         switch result {
         case .unverified:
             AppLogger.shared.security("Transaction non vérifiée détectée")
@@ -265,11 +265,11 @@ extension Product {
     /// Description détaillée du produit
     var detailedDescription: String {
         switch self.id {
-        case ProductID.unlimitedSecrets.rawValue:
+        case StoreManager.ProductID.unlimitedSecrets.rawValue:
             return "Stockez un nombre illimité de secrets en toute sécurité"
-        case ProductID.pro.rawValue:
+        case StoreManager.ProductID.pro.rawValue:
             return "Accès complet + fonctionnalités avancées + support prioritaire"
-        case ProductID.lifetime.rawValue:
+        case StoreManager.ProductID.lifetime.rawValue:
             return "Accès illimité à vie sans abonnement récurrent"
         default:
             return description

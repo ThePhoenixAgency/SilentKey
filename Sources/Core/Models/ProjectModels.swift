@@ -11,12 +11,12 @@ struct ProjectItem: SecretItemProtocol, Identifiable, Codable, Hashable {
     let id: UUID
     var title: String
     var version: Int
-    var createdDate: Date
-    var lastModified: Date
+    var createdAt: Date
+    var modifiedAt: Date
     
     // Propriétés spécifiques au projet
     var description: String
-    var tags: [String]
+    var tags: Set<String>
     var status: ProjectStatus
     var icon: ProjectIcon
     var color: String // Hex color
@@ -29,9 +29,10 @@ struct ProjectItem: SecretItemProtocol, Identifiable, Codable, Hashable {
     var relatedPasswords: [UUID]
     
     // Métadonnées
-    var notes: String
+    var notes: String?
     var url: String? // URL du dépôt Git ou site web
     var environment: ProjectEnvironment
+    var isFavorite: Bool
     
     // MARK: - Initialisation
     
@@ -39,19 +40,20 @@ struct ProjectItem: SecretItemProtocol, Identifiable, Codable, Hashable {
         id: UUID = UUID(),
         title: String,
         description: String = "",
-        tags: [String] = [],
+        tags: Set<String> = [],
         status: ProjectStatus = .active,
         icon: ProjectIcon = .folder,
         color: String = "#007AFF",
-        notes: String = "",
+        notes: String? = nil,
         url: String? = nil,
-        environment: ProjectEnvironment = .development
+        environment: ProjectEnvironment = .development,
+        isFavorite: Bool = false
     ) {
         self.id = id
         self.title = title
         self.version = 1
-        self.createdDate = Date()
-        self.lastModified = Date()
+        self.createdAt = Date()
+        self.modifiedAt = Date()
         self.description = description
         self.tags = tags
         self.status = status
@@ -65,6 +67,7 @@ struct ProjectItem: SecretItemProtocol, Identifiable, Codable, Hashable {
         self.notes = notes
         self.url = url
         self.environment = environment
+        self.isFavorite = isFavorite
     }
     
     // MARK: - Relations Management
@@ -73,42 +76,42 @@ struct ProjectItem: SecretItemProtocol, Identifiable, Codable, Hashable {
     mutating func addAPIKey(_ keyID: UUID) {
         if !relatedAPIKeys.contains(keyID) {
             relatedAPIKeys.append(keyID)
-            lastModified = Date()
+            modifiedAt = Date()
         }
     }
     
     /// Supprime une relation vers un API Key
     mutating func removeAPIKey(_ keyID: UUID) {
         relatedAPIKeys.removeAll { $0 == keyID }
-        lastModified = Date()
+        modifiedAt = Date()
     }
     
     /// Ajoute une relation vers un Secret
     mutating func addSecret(_ secretID: UUID) {
         if !relatedSecrets.contains(secretID) {
             relatedSecrets.append(secretID)
-            lastModified = Date()
+            modifiedAt = Date()
         }
     }
     
     /// Supprime une relation vers un Secret
     mutating func removeSecret(_ secretID: UUID) {
         relatedSecrets.removeAll { $0 == secretID }
-        lastModified = Date()
+        modifiedAt = Date()
     }
     
     /// Ajoute une relation vers un compte bancaire
     mutating func addBankingAccount(_ accountID: UUID) {
         if !relatedBankingAccounts.contains(accountID) {
             relatedBankingAccounts.append(accountID)
-            lastModified = Date()
+            modifiedAt = Date()
         }
     }
     
     /// Supprime une relation vers un compte bancaire
     mutating func removeBankingAccount(_ accountID: UUID) {
         relatedBankingAccounts.removeAll { $0 == accountID }
-        lastModified = Date()
+        modifiedAt = Date()
     }
     
     /// Compte total des relations
@@ -122,6 +125,37 @@ struct ProjectItem: SecretItemProtocol, Identifiable, Codable, Hashable {
     var hasRelations: Bool {
         totalRelations > 0
     }
+    
+    // MARK: - SecretItemProtocol Conformance
+    
+    var category: SecretCategory {
+        return .custom
+    }
+    
+    var iconName: String {
+        return icon.systemImage
+    }
+    
+    func encryptedData() throws -> Data {
+        return try JSONEncoder().encode(self)
+    }
+    
+    func validate() throws {
+        if title.isEmpty {
+            throw ProjectValidationError.emptyTitle
+        }
+    }
+    
+    func searchableText() -> String {
+        let tagsText = tags.joined(separator: " ")
+        return "\(title) \(description) \(tagsText) \(notes ?? "")"
+    }
+}
+
+// MARK: - Project Validation Error
+
+enum ProjectValidationError: Error {
+    case emptyTitle
 }
 
 // MARK: - Project Status
@@ -393,9 +427,9 @@ enum ProjectSortOption: String, CaseIterable {
         case .title:
             result = lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
         case .createdDate:
-            result = lhs.createdDate < rhs.createdDate
+            result = lhs.createdAt < rhs.createdAt
         case .lastModified:
-            result = lhs.lastModified < rhs.lastModified
+            result = lhs.modifiedAt < rhs.modifiedAt
         case .status:
             result = lhs.status.rawValue < rhs.status.rawValue
         case .relationsCount:

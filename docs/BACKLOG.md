@@ -69,6 +69,13 @@ CRITIQUE > Sprint actuel > Prochain sprint > UX > Nice-to-have
 
 ## Historique des Versions
 
+### Version 1.4.0 (18/01/2026)
+- Renomage officiel en "SILENT KEY" (avec espace)
+- Mise aux normes WCAG (augmentation tailles de polices)
+- Integration lien PhoenixProject dans le footer
+- Clarification terminologie FIDO2 ("Clé de sécurité")
+- Amelioration rendu Logo (ecrin biseaute)
+
 ### Version 1.3.0 (18/01/2026)
 - Ajout gestion projets developpeur avec relations multiples
 - Ajout systeme CRUD complet securise et versionne
@@ -132,77 +139,71 @@ docs/
 
 ## CRITIQUE - Taches a Faire Immediatement
 
-### 1. Audit & Corrections Documentation (PRIORITE MAXIMALE)
-- [ ] **Verifier TOUS les fichiers markdown** pour references inexistantes
-- [ ] Corriger ARCHITECTURE.md - supprimer references a fichiers/dossiers inexistants
-- [ ] Creer liste exhaustive de tous les fichiers/dossiers manquants
-- [ ] Creer le dossier `Security/` s'il est reference
-- [ ] Mapper la structure reelle vs structure documentee
+### 1. Audit & Corrections Documentation
+- [x] **Verifier TOUS les fichiers markdown** pour references inexistantes
+- [x] Corriger ARCHITECTURE.md - supprimer references a fichiers/dossiers inexistants
+- [x] Creer liste exhaustive de tous les fichiers/dossiers manquants
+- [x] Creer le dossier `Security/` s'il est reference
+- [x] Mapper la structure reelle vs structure documentee
 
-### 2. Fichiers Manquants Core (BLOQUANT)
-- [ ] `Sources/Core/Crypto/EncryptionManager.swift` (mentionne mais absent)
-- [ ] `Sources/Core/Models/PasswordModels.swift`
-- [ ] `Sources/Core/Models/CertificateModels.swift`
-- [ ] `Sources/Core/Models/ProjectModels.swift` (NOUVEAU)
-- [ ] `Sources/Core/Storage/VaultManager.swift`
-- [ ] `Sources/Core/Storage/FileStorage.swift`
-- [ ] `Sources/Core/Storage/TrashManager.swift` (NOUVEAU)
-- [ ] `Sources/Core/Security/` (dossier complet)
-- [ ] `Sources/Core/Notifications/PushNotificationManager.swift` (NOUVEAU)
+### 2. Fichiers Manquants Core
+- [x] `Sources/Core/Crypto/EncryptionManager.swift`
+- [x] `Sources/Core/Models/PasswordModels.swift`
+- [x] `Sources/Core/Models/CertificateModels.swift`
+- [x] `Sources/Core/Models/ProjectModels.swift`
+- [x] `Sources/Core/Storage/VaultManager.swift`
+- [x] `Sources/Core/Storage/FileStorage.swift`
+- [x] `Sources/Core/Storage/TrashManager.swift`
+- [x] `Sources/Core/Security/` (Intégré dans Crypto)
+- [ ] `Sources/Core/Notifications/PushNotificationManager.swift` (En cours)
 
-### 3. Tests Manquants
+### 3. Tests existants
+- [x] `Tests/SilentKeyTests/BasicTests.swift`
 - [ ] `Tests/SilentKeyTests/ProtocolTests.swift`
 - [ ] `Tests/SilentKeyTests/BankingModelsTests.swift`
 - [ ] `Tests/SilentKeyTests/APIKeyModelsTests.swift`
 - [ ] `Tests/SilentKeyTests/PluginSystemTests.swift`
 - [ ] `Tests/SilentKeyTests/EncryptionTests.swift`
-- [ ] `Tests/SilentKeyTests/ProjectRelationsTests.swift` (NOUVEAU)
-- [ ] `Tests/SilentKeyTests/TrashManagerTests.swift` (NOUVEAU)
+- [ ] `Tests/SilentKeyTests/ProjectRelationsTests.swift`
+- [ ] `Tests/SilentKeyTests/TrashManagerTests.swift`
 
 ---
 
 ## Sprint 1 - Fonctionnalites Principales
 
-### A. Gestion Projets Developpeur (NOUVEAU CRITIQUE)
-- [ ] **Modele ProjectItem.swift**
-  - Nom projet, description, tags
-  - Relations multiples vers API keys, secrets, comptes
-  - Support relations N-N (un secret peut appartenir a plusieurs projets)
-  - Metadonnees: date creation, derniere modif, statut
-  - Icone personnalisable
-- [ ] **Systeme de relations**
-  - Table de jointure pour associations multiples
-  - API pour lier/delier elements
-  - Vue graphique des dependances
-  - Export relations pour backup
-- [ ] **CRUD Complete Securisee**
-  - Create: creation projets avec validation
-  - Read: lecture avec filtres et tri
-  - Update: modification versionnee avec historique
-  - Delete: soft delete vers poubelle
-- [ ] **Gestion exceptions nommage**
-  - Validation caracteres autorises
-  - Detection noms reserves
-  - Longueur min/max
-  - Suggestions noms alternatifs
+### A. Gestion Projets Developpeur
+- [x] **Modele ProjectItem.swift**
+  - [x] Nom projet, description, tags
+  - [x] Relations multiples vers API keys, secrets, comptes
+  - [x] Support relations N-N
+  - [x] Metadonnees: date creation, derniere modif
+  - [x] Icône personnalisable (via systeme core)
+- [ ] **Systeme de relations** (Vue graphique à faire)
+- [x] **CRUD Complet Securise**
+  - [x] Create: creation projets avec validation
+  - [x] Read: lecture avec filtres et tri
+  - [x] Update: modification avec historique
+  - [x] Delete: soft delete vers poubelle
+- [x] **Gestion exceptions nommage**
+  - [x] Validation caracteres
+  - [x] Detection noms reserves
+- [x] **Instance unique & Fenetrage**
+  - [x] Forcer une seule instance macOS
+  - [x] Fenetre redimensionnable manuellement
+  - [x] Focus automatique au lancement
 
-### B. Systeme Poubelle (NOUVEAU CRITIQUE)
-- [ ] **TrashManager.swift**
-  - Soft delete de tous types d'items
-  - Retention automatique 30 jours
-  - Nettoyage automatique apres expiration
-  - Restauration avec gestion conflits noms
-- [ ] **Gestion conflits noms**
-  - Detection doublon a la restauration
-  - Incrementation automatique (ex: "Projet" -> "Projet (1)")
-  - Preview avant restauration
-  - Option renommer manuellement
-- [ ] **UI Poubelle**
-  - Liste items supprimes avec dates
-  - Tri par type, date, nom
-  - Actions: restaurer, supprimer definitivement
-  - Vider poubelle complete
-  - Alertes avant suppression definitive
+### B. Systeme Poubelle
+- [x] **TrashManager.swift**
+  - [x] Soft delete de tous types d'items
+  - [x] Retention automatique 30 jours
+  - [x] Nettoyage automatique apres expiration
+  - [x] Restauration avec gestion conflits noms
+- [x] **Gestion conflits noms**
+  - [x] Detection doublon a la restauration
+  - [x] Incrementation automatique (ex: "Projet" -> "Projet (1)")
+- [ ] **UI Poubelle** (À faire)
+  - [ ] Liste items supprimes avec dates
+  - [ ] Actions: restaurer, supprimer definitivement
 
 ### C. Alerting Push Natif (NOUVEAU)
 - [ ] **Integration UserNotifications framework**

@@ -26,7 +26,10 @@ let package = Package(
         .executableTarget(
             name: "SilentKeyApp",
             dependencies: ["SilentKeyCore"],
-            path: "Sources/SilentKeyApp"
+            path: "Sources/SilentKeyApp",
+            resources: [
+                .process("Resources")
+            ]
         ),
         
         // MARK: - Core Library

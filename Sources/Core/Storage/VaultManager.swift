@@ -6,9 +6,8 @@
 import Foundation
 import CryptoKit
 
-/// Gestionnaire principal du coffre-fort chiffré
-actor VaultManager {
-    static let shared = VaultManager()
+public actor VaultManager {
+    public static let shared = VaultManager()
     
     private let encryptionManager: EncryptionManager
     private let fileStorage: FileStorage
@@ -27,7 +26,7 @@ actor VaultManager {
     // MARK: - Unlock/Lock
     
     /// Déverrouille le coffre avec le mot de passe maître
-    func unlock(masterPassword: String) async throws {
+    public func unlock(masterPassword: String) async throws {
         logger.log("Tentative de déverrouillage du coffre", level: .info, category: .security)
         
         // Dériver la clé maître depuis le mot de passe
@@ -43,7 +42,7 @@ actor VaultManager {
     }
     
     /// Verrouille le coffre et efface la clé de la RAM
-    func lock() {
+    public func lock() {
         logger.log("Verrouillage du coffre", level: .info, category: .security)
         
         // Effacer la clé de la RAM
@@ -192,7 +191,7 @@ public enum VaultError: LocalizedError {
     case encryptionFailed
     case decryptionFailed
     
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .vaultLocked:
             return "Le coffre est verrouillé. Veuillez le déverrouiller d'abord."

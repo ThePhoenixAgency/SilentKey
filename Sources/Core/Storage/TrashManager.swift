@@ -220,7 +220,7 @@ actor TrashManager {
 
 /// Représente un item dans la poubelle
 public struct TrashItem: Identifiable {
-    let id: UUID
+    public let id: UUID
     let deletedDate: Date
     let expirationDate: Date
     let daysRemaining: Int
@@ -241,7 +241,7 @@ public enum TrashError: LocalizedError {
     case itemAlreadyExpired
     case restoreConflict
     
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .itemNotInTrash:
             return "L'item n'est pas dans la poubelle."

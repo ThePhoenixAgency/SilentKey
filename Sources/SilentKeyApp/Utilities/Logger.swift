@@ -31,14 +31,14 @@ public final class AppLogger {
     
     // MARK: - Niveaux de log
     public enum LogLevel: String {
-        case debug = [DEBUG]DEBUG"
-        case info = [INFO]INFO"
-        case warning = [WARNING]WARNING"
-        case error = [ERROR]ERROR"
-        case critical = [CRITICAL]CRITICAL"
-        case security = [SECURITY]SECURITY"
-        case performance = [PERF]PERFORMANCE"
-        case userAction = [USER]USER"
+        case debug = "[DEBUG]"
+        case info = "[INFO]"
+        case warning = "[WARNING]"
+        case error = "[ERROR]"
+        case critical = "[CRITICAL]"
+        case security = "[SECURITY]"
+        case performance = "[PERF]"
+        case userAction = "[USER]"
     }
     
     // MARK: - Catégories

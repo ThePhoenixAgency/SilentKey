@@ -281,7 +281,7 @@ public enum StorageError: LocalizedError {
     case listFailed(Error)
     case directoryCreationFailed
     
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .writeFailed(let error):
             return "Échec écriture: \(error.localizedDescription)"
