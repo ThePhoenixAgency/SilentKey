@@ -1,55 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    SilentKey Appcast Feed
-    Fichier de mise à jour automatique pour l'application SilentKey
+    TODO: Fichier appcast.xml pour mises a jour automatiques Sparkle
     
-    Author: PhoenixProject
-    Website: http://ThePhoenixAgency.github.io
-    Support: https://github.com/PhoenixProject/SilentKey/issues
+    Ce fichier sera genere automatiquement lors de la publication de releases.
+    PAS DE PLACEHOLDERS - Voir BACKLOG.md pour suivi implementation.
+    
+    Fonctionnalite NON ACTIVE tant que non completement implementee.
 -->
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <channel>
-        <title>SilentKey Updates</title>
-        <link>https://ethanthephoenix38.github.io/SilentKey/appcast.xml</link>
-        <description>Most recent updates for SilentKey application</description>
-        <language>fr-FR</language>
-        
-        <!-- Version 1.0.0 - Version initiale -->
-        <item>
-            <title>Version 1.0.0</title>
-            <link>https://github.com/PhoenixProject/SilentKey/releases/tag/v1.0.0</link>
-            <sparkle:version>1.0.0</sparkle:version>
-            <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
-            <description><![CDATA[
-                <h2>SilentKey 1.0.0 - Version Initiale</h2>
-                <h3>✨ Fonctionnalités</h3>
-                <ul>
-                    <li>Double chiffrement AES-256-GCM + XChaCha20-Poly1305</li>
-                    <li>Interface SwiftUI native pour macOS</li>
-                    <li>Stockage local sécurisé des secrets</li>
-                    <li>Support des clés API, tokens, mots de passe, clés SSH</li>
-                    <li>Recherche et filtrage des secrets</li>
-                    <li>Import/Export sécurisé</li>
-                    <li>Mise à jour automatique</li>
-                </ul>
-                <h3>🔒 Sécurité</h3>
-                <ul>
-                    <li>Sandboxing macOS activé</li>
-                    <li>Aucune vulnérabilité CVE connue</li>
-                    <li>Hardened Runtime</li>
-                    <li>Code signé et notarisé par Apple</li>
-                </ul>
-            ]]></description>
-            <pubDate>Mon, 06 Jan 2025 00:00:00 +0000</pubDate>
-            <enclosure
-                url="https://github.com/PhoenixProject/SilentKey/releases/download/v1.0.0/SilentKey-1.0.0.dmg"
-                sparkle:version="1.0.0"
-                sparkle:shortVersionString="1.0.0"
-                type="application/octet-stream"
-                sparkle:edSignature="SIGNATURE_HERE"
-            />
-            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-        </item>
-        
-    </channel>
-</rss>
+<!-- Fichier desactive intentionnellement - TODO dans BACKLOG.md -->
