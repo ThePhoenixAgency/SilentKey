@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    TODO: Fichier appcast.xml pour mises a jour automatiques Sparkle
-    
-    Ce fichier sera genere automatiquement lors de la publication de releases.
-    PAS DE PLACEHOLDERS - Voir BACKLOG.md pour suivi implementation.
-    
-    Fonctionnalite NON ACTIVE tant que non completement implementee.
+    TODO: Appcast.xml file for automatic Sparkle updates    
+    This file will be automatically generated during release publication.    PAS DE PLACEHOLDERS - Voir BACKLOG.md pour suivi implementation.
 -->
-<!-- Fichier desactive intentionnellement - TODO dans BACKLOG.md -->
